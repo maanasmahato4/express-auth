@@ -36,3 +36,6 @@
 1698951777612	384954a5-fd78-4cb1-9d3f-4b9dc8e15fd7	POST	/api/user	MongoServerError: E11000 duplicate key error collection: test.auth-users index: email_1 dup key: { email: "maanas123456@gmail.com" }
 1698951791331	82d18a66-0729-4024-8598-0b952004dbf8	POST	/api/user	Error: ENOENT: no such file or directory, unlink 'E:\express-auth\backend\controllers\uploads\avatar.png'
 1698951825207	48eacfab-d613-4edb-9995-529587715a97	POST	/api/user	Error: ENOENT: no such file or directory, unlink 'E:\express-auth\backend\controllers\uploads\avatar.png'
+1698952253617	47940c80-3252-4d04-a581-c92e27543046	POST	/api/user	[object Object]
+1698952309555	f7d5a951-b662-4d84-9e55-1b76ed4a40ce	POST	/api/user	[object Object]
+1698952323776	237c0859-c8bf-4a97-8b5c-00cca4b1721f	POST	/api/user	[object Object]
