@@ -1,0 +1,38 @@
+1698949345912	0aba75ea-cd98-43bf-8da5-ab55f58cd051	POST	/api/user	Error: file type is not supported1698949448946	d60b8bb5-433e-4cb4-b81e-a98079a35d73	POST	/api/user	Error: file type is not supported1698949487881	bb54dc73-72df-4dd1-9bb5-f7fbc632e530	POST	/api/user	Error: file type is not supported1698949510376	23cf4b40-9e6b-48d9-ad94-2b289c81000e	POST	/api/user	Error: file type is not supported
+1698949519953	4c35274c-b4e4-41a4-838d-3e42043add52	POST	/api/user	Error: file type is not supported
+1698949581113	45b23d97-819e-4ea2-a756-449f6cbe6334	POST	/api/user	Error: file type is not supported
+1698949589126	c98d0d1a-50c1-4618-9e13-9492bb93f683	POST	/api/user	Error: file type is not supported
+1698949672699	20dcfd4a-8d7b-4600-939c-d41bf4fe3a9e	POST	/api/user	[object Object]
+1698949690740	f3cc91bc-a61c-4e55-9412-46f867c47d43	POST	/api/user	[object Object]
+1698949712995	0e6aa635-012b-4956-973b-bb3012d29edf	POST	/api/user	[object Object]
+1698949753883	4c44811a-cbef-422a-92d0-05ead154b8d1	POST	/api/user	[object Object]
+1698949830262	c0f3ae76-0eac-4877-a275-93bdaa4714dc	POST	/api/user	[object Object]
+1698949959922	42484da7-4488-475b-bce6-2c74f55f21a9	POST	/api/user	[object Object]
+1698949969910	a4dc1c55-d022-4948-83e6-641005fcd7dc	POST	/api/user	[object Object]
+1698949981539	b9988661-cf92-4166-a015-659a48319514	POST	/api/user	[object Object]
+1698949990476	a1b4351f-8108-4f11-b008-32d7eb5c66b3	POST	/api/user	[object Object]
+1698950060037	1302fc5c-ebf9-4b63-9836-4f733b329a49	POST	/api/user	[object Object]
+1698950092032	e9241776-7ea5-40c4-a977-1e975b5d5438	POST	/api/user	[object Object]
+1698950213196	612cac66-440f-4eaf-a99c-2a9bd51f6dd3	POST	/api/user	[object Object]
+1698950238664	ac7b36c1-b8c2-44d3-bdd7-c6ec06b8d76b	POST	/api/user	[object Object]
+1698950466330	41b0b5fc-d7b3-436f-910e-612bfa800db0	POST	/api/user	[object Object]
+1698950542041	0b29c8d5-3d6e-4c92-8e5f-b7f8dfb0c3f0	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698950831269	d443211a-1eae-4768-8ab3-99d5a2c830d7	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698950932535	16c33959-4007-4fad-90f7-69b7f4f378ed	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698950972385	5c7c8f89-4dfe-489c-9cdd-63ecb6f75253	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698951002180	272455b0-37de-478c-b40e-aa90bf972428	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698951113098	d2727f54-6413-4496-b877-a7531af1a358	POST	/api/user	TypeError: Cannot read properties of undefined (reading 'upload')
+1698951145723	266a1786-710a-4e65-89eb-45dd209963b5	POST	/api/user	TypeError: Cannot read properties of undefined (reading 'upload')
+1698951177235	ae04cf37-af41-46ff-8ea2-46289ca14b00	POST	/api/user	TypeError: Cannot read properties of undefined (reading 'upload')
+1698951198294	0e07762b-0019-444c-bb14-6a6922345c48	POST	/api/user	TypeError: Cannot read properties of undefined (reading 'upload')
+1698951286122	bd9b788c-0926-4af6-bd49-5c54c16fd15d	POST	/api/user	Error: ENOENT: no such file or directory, open 'E:\express-auth\backend\uploads\avatar.png'
+1698951341722	fe76349c-72d3-44ba-ac14-a5d6a6ea0e22	POST	/api/user	Error: ENOENT: no such file or directory, open 'E:\express-auth\backend\uploads\avatar.png'
+1698951461017	d20de58b-c566-469b-a265-5cb65384a568	POST	/api/user	TypeError: Cannot read properties of undefined (reading 'upload')
+1698951539963	f34cd919-c872-4138-9f81-32444de8546b	POST	/api/user	ValidationError: roles.0: `[` is not a valid enum value for path `roles.0`., roles.1: `"` is not a valid enum value for path `roles.1`., roles.2: `u` is not a valid enum value for path `roles.2`., roles.3: `s` is not a valid enum value for path `roles.3`., roles.4: `e` is not a valid enum value for path `roles.4`., roles.5: `r` is not a valid enum value for path `roles.5`., roles.6: `"` is not a valid enum value for path `roles.6`., roles.7: `,` is not a valid enum value for path `roles.7`., roles.8: ` ` is not a valid enum value for path `roles.8`., roles.9: `"` is not a valid enum value for path `roles.9`., roles.10: `m` is not a valid enum value for path `roles.10`., roles.11: `o` is not a valid enum value for path `roles.11`., roles.12: `d` is not a valid enum value for path `roles.12`., roles.13: `"` is not a valid enum value for path `roles.13`., roles.14: `]` is not a valid enum value for path `roles.14`.
+1698951586034	4bedca18-2337-4498-9e42-087fc7d67526	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698951627298	dfc39ace-0dbc-43a2-aaaa-736b8ab371e9	POST	/api/user	ValidationError: roles.0: `["user", "mod"]` is not a valid enum value for path `roles.0`.
+1698951673399	bd6dce7c-09f0-4a0d-b673-1997bd07470c	POST	/api/user	ValidationError: roles.0: `user,mod` is not a valid enum value for path `roles.0`.
+1698951729180	23b1c9ec-0ad7-445a-a3e1-c9e59072db35	POST	/api/user	ValidationError: roles.0: `user,mod` is not a valid enum value for path `roles.0`.
+1698951777612	384954a5-fd78-4cb1-9d3f-4b9dc8e15fd7	POST	/api/user	MongoServerError: E11000 duplicate key error collection: test.auth-users index: email_1 dup key: { email: "maanas123456@gmail.com" }
+1698951791331	82d18a66-0729-4024-8598-0b952004dbf8	POST	/api/user	Error: ENOENT: no such file or directory, unlink 'E:\express-auth\backend\controllers\uploads\avatar.png'
+1698951825207	48eacfab-d613-4edb-9995-529587715a97	POST	/api/user	Error: ENOENT: no such file or directory, unlink 'E:\express-auth\backend\controllers\uploads\avatar.png'

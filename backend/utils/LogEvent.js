@@ -5,7 +5,7 @@ const { v4: uuid } = require("uuid");
 
 const LogEvent = async (message, fileName) => {
     const date = Date.now();
-    const Message = `${date}\t${uuid()}\t${message}`;
+    const Message = `${date}\t${uuid()}\t${message}\n`;
     try {
         if (!fs.existsSync(path.join(__dirname, '..', 'logs'))) {
             await fsPromise.mkdir(path.join(__dirname, '..', 'logs'));

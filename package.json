@@ -3,7 +3,8 @@
     "concurrently": "^8.2.2"
   },
   "scripts": {
-    "react": "cd frontend && yarn dev",
-    "express": "cd backend && yarn dev"
+    "react": "cd frontend && npm run dev",
+    "express": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run react\" \"npm run express\""
   }
 }

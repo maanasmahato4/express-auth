@@ -23,11 +23,14 @@ const UserSchema = new mongoose.Schema({
     },
     imageUrl: {
         required: true,
-        type: String
+        type: {
+            img_id: String,
+            url: String
+        }
     }
 
 }, { timestamps: true });
 
 const User = mongoose.model('auth-users', UserSchema);
 
-module.exports = {User}
+module.exports = { User }
