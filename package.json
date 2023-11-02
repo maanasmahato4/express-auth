@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "react": "cd frontend && yarn dev",
+    "express": "cd backend && yarn dev"
+  }
+}
