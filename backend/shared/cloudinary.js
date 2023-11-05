@@ -1,4 +1,4 @@
-const { INTERNAL_SERVER_ERROR } = require("../utils/contants");
+const { INTERNAL_SERVER_ERROR } = require("../utils/constants");
 const { cloudinary } = require("../Config/cloudinary.config");
 
 const AddToCloudinary = (filePath, folder) => {
@@ -12,8 +12,17 @@ const AddToCloudinary = (filePath, folder) => {
 
         return result;
     } catch (error) {
-        throw Error(`${INTERNAL_SERVER_ERROR}\t${error}`)
+        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
+    }
+};
+
+const DeleteFromCloudinary = (publicId) => {
+    try {
+        const result = cloudinary.uploader.destroy(publicId);
+        return result;
+    } catch (error) {
+        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
     }
 }
 
-module.exports = { AddToCloudinary };
+module.exports = { AddToCloudinary, DeleteFromCloudinary };

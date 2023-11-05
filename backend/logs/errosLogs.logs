@@ -39,3 +39,17 @@
 1698952253617	47940c80-3252-4d04-a581-c92e27543046	POST	/api/user	[object Object]
 1698952309555	f7d5a951-b662-4d84-9e55-1b76ed4a40ce	POST	/api/user	[object Object]
 1698952323776	237c0859-c8bf-4a97-8b5c-00cca4b1721f	POST	/api/user	[object Object]
+11/5/2023, 6:54:15 PM	099412b7-d7cc-470b-983a-2a28bee9c27a	PUT	/api/user/654793b2c6cde134bf28039a	Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+11/5/2023, 6:59:34 PM	c19ec40b-1a56-4277-951b-8f2b78fd2965	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:08:27 PM	abb2c97b-720b-4a77-a87c-64af84fd33ae	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:12:04 PM	13c1d593-6db6-4f09-ad99-ec8640eea1fe	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:12:19 PM	0faa406d-56fc-48af-8930-dc8ac8f36c50	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:12:40 PM	741fdf35-98b0-46b0-bc6a-c5e5e871b990	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:17:16 PM	7347bfaa-673c-4002-8d9d-f2889f8ef17a	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:18:12 PM	5d53bb48-bdc1-4214-b10d-f4b3043180b2	PUT	/api/user/654793b2c6cde134bf28039a	user could not be updated
+11/5/2023, 7:20:48 PM	8de274e0-fa6d-440c-8dd3-eba288b7a3c8	PUT	/api/user/654793b2c6cde134bf28039a	TypeError: body.roles.split is not a function
+11/5/2023, 7:24:55 PM	56d50acf-7c2d-4f46-831f-69a5fc02f50b	PUT	/api/user/654793b2c6cde134bf28039a	[object Object]
+11/5/2023, 7:26:46 PM	265e2812-686a-46c3-9d49-aeba7ba7b892	PUT	/api/user/654793b2c6cde134bf28039a	[object Object]
+11/5/2023, 7:41:12 PM	a259c96c-d4e1-4a42-a548-0cd59581e429	PUT	/api/user/654793b2c6cde134bf28039a	[object Object]
+11/5/2023, 11:59:58 PM	284ea58b-6229-44b9-a204-d3353eab5f42	POST	/api/auth/register	[object Object]
+11/6/2023, 12:00:51 AM	4ed676cd-e953-4fc5-ade4-3fb72aac5842	POST	/api/auth/register	[object Object]

@@ -1,8 +1,8 @@
-const {LogEvent} = require("../utils");
+const { LogEvent } = require("../utils");
 const ErrorHandler = (err, req, res, next) => {
     const message = `${req.method}\t${req.url}\t${err.error}`;
     LogEvent(message, 'errosLogs.logs');
-    res.status(err.status).json({error: err.message});
+    res.status(err.status).json({ message: err.message, error: err.error });
 }
 
-module.exports = {ErrorHandler};
+module.exports = { ErrorHandler };
