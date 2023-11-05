@@ -1,5 +1,10 @@
-const {AddUser} = require("./users/index");
+const {GetUsers, GetUserById, GetUserByEmail, AddUser, UpdateUser, DeleteUser } = require("./users/index");
 
 module.exports = {
-    AddUser
+    AddUser,
+    GetUsers,
+    GetUserById,
+    GetUserByEmail,
+    UpdateUser,
+    DeleteUser
 }

@@ -1,40 +1,79 @@
-const path = require("path");
-const { cloudinary } = require("../../cloudinary/config");
-const { User } = require("../../model/user.model");
-const fs = require("fs");
+const { getUsers, getUserById, getUserByEmail, addUser, updateUser, deleteUser } = require("./userFunctions");
+const { NOT_FOUND_ERROR } = require("../../utils/contants");
 
-const AddUser = async (req, res, next) => {
+const GetUsers = async (req, res, next) => {
     try {
-        const file = req.file.path;
-        const result = await cloudinary.uploader.upload(file, {
-            overwrite: true,
-            invalidate: true,
-            resource_type: "auto",
-            folder: "users"
-        });
-        if (!result) {
-            next("error no imageurl found")
+        const users = await getUsers();
+        if (!users || users.length === 0) {
+            res.status(404).json({ error: NOT_FOUND_ERROR })
         }
-        const newUser = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            roles: req.body.roles.split(','),
-            imageUrl: {
-                img_id: result.public_id,
-                url: result.url
-            }
-        });
-        const user = await newUser.save();
-
-        const imageExist = path.join(__dirname, "../../uploads", req.file.originalname);
-        if (imageExist) {
-            fs.unlinkSync(imageExist);
-        }
-        res.status(201).json(user)
+        res.status(200).json(users);
     } catch (error) {
-        next(error);
+        next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
     }
 }
 
-module.exports = { AddUser };
+const GetUserById = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const user = await getUserById(id);
+        if (!user || user.length === 0) {
+            res.status(404).json({ error: NOT_FOUND_ERROR });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
+    }
+}
+
+const GetUserByEmail = async (req, res, next) => {
+    try {
+        const email = req.body.email;
+        const user = await getUserByEmail(email);
+        if (!user || user.length === 0) {
+            res.status(404).json({ error: NOT_FOUND_ERROR });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
+    }
+}
+
+const AddUser = async (req, res, next) => {
+    try {
+        const user = await addUser(req.body, req.file);
+        if (!user) {
+            res.status(500).json({ error: "user could not be saved" });
+        }
+        res.status(201).json(user);
+    } catch (error) {
+        next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
+    }
+}
+
+const UpdateUser = async (req, res, next) => {
+    try {
+        const user = await updateUser(req.body, req.file);
+        if (!user) {
+            res.status(500).json({ error: "user could not be updated" });
+        }
+        res.status(203).json(user);
+    } catch (error) {
+        next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
+    }
+}
+
+const DeleteUser = async (req, res, next) => {
+    try {
+        const deleted = await deleteUser(req.body._id);
+        if (!deleted) {
+            res.status(500).json({ error: "user could not be deleted" });
+        }
+        res.status(204).json({ message: "user deleted" });
+    } catch (error) {
+        next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
+    }
+}
+
+
+module.exports = { GetUsers, GetUserById, GetUserByEmail, AddUser, UpdateUser, DeleteUser };

@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
             img_id: String,
             url: String
         }
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true });
