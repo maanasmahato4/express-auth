@@ -2,7 +2,7 @@ const { hashValue, compareValues } = require("../../utils/bcrypt");
 const { getUserByEmail, deleteUser, addUser } = require("../users/userFunctions");
 const { CONFLICT_ERROR, INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 const { generateAccessToken, generateRefreshToken } = require("../../utils/tokenGenerators");
-
+const { TokenModel } = require("../../model/token.model");
 const register = async (req, res, next) => {
     const { username, email, password, roles, isVerified } = req.body;
     const file = req.file;
@@ -26,13 +26,20 @@ const register = async (req, res, next) => {
         if (!userSaved) {
             next({ status: 500, message: INTERNAL_SERVER_ERROR, error: "user could not be saved" });
         }
-        // the object is only token fix this
         const userTokenObject = generateAccessToken(userSaved);
+        const RefreshTokenObject = generateRefreshToken(userSaved);
+        const TokenObject = new TokenModel({
+            uuid: userSaved._id,
+            refresh_token: RefreshTokenObject.refresh_token
+        });
+        const savedRefreshToken = await TokenObject.save();
+        if(!savedRefreshToken){
+            next({status: 500, message: INTERNAL_SERVER_ERROR, error: "user refresh token could not be saved"})
+        }
         res.status(200).json(userTokenObject);
     } catch (error) {
         next({ status: 500, message: INTERNAL_SERVER_ERROR, error: error });
     }
-
 }
 
 const signin = (req, res, next) => {

@@ -21,7 +21,7 @@ const generateAccessToken = (user) => {
             expiresIn: '30min'
         }
     );
-    return access_token;
+    return {access_token};
 };
 
 const generateRefreshToken = (user) => {
@@ -36,7 +36,7 @@ const generateRefreshToken = (user) => {
         { expiresIn: '1d' }
     );
 
-    return refresh_token;
+    return {refresh_token};
 }
 
 
