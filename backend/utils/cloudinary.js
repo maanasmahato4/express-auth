@@ -1,4 +1,4 @@
-const { INTERNAL_SERVER_ERROR } = require("../utils/constants");
+const { INTERNAL_SERVER_ERROR } = require("./constants");
 const { cloudinary } = require("../Config/cloudinary.config");
 
 const AddToCloudinary = (filePath, folder) => {

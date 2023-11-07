@@ -1,6 +1,6 @@
 const express = require("express");
 const { upload } = require("../utils/MULTER.JS");
-const { AddUser, GetUsers, GetUserById, GetUserByEmail, UpdateUser, DeleteUser, register } = require("../controllers");
+const { AddUser, GetUsers, GetUserById, GetUserByEmail, UpdateUser, DeleteUser, register, signin } = require("../controllers");
 
 const router = express.Router();
 
@@ -13,6 +13,7 @@ router
     .put("/user/:id", upload.single("image"), UpdateUser)
     .delete("/user/:id", DeleteUser)
     // auth routes
-    .post("/auth/register", upload.single("image"), register);
+    .post("/auth/register", upload.single("image"), register)
+    .post("/auth/signin", signin);
 
 module.exports = router;

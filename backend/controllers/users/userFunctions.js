@@ -2,8 +2,9 @@ const path = require("path");
 const { User } = require("../../model/user.model");
 const fs = require("fs");
 const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
-const { AddToCloudinary, DeleteFromCloudinary } = require("../../shared/cloudinary");
+const { AddToCloudinary, DeleteFromCloudinary } = require("../../utils/cloudinary");
 
+// @desc Returns and array of users
 const getUsers = async () => {
     try {
         const users = await User.find();
@@ -13,6 +14,8 @@ const getUsers = async () => {
     }
 }
 
+// @desc Return a document of a user with matching _id
+// @param id: String
 const getUserById = async (id) => {
     try {
         const user = await User.findById(id);
@@ -22,6 +25,8 @@ const getUserById = async (id) => {
     }
 }
 
+// @desc Returns a user with matching email
+// @param email:String
 const getUserByEmail = async (email) => {
     try {
         const user = await User.findOne({ email: email });
@@ -31,10 +36,11 @@ const getUserByEmail = async (email) => {
     }
 }
 
-
+// @desc Adds a new user to the document
+// @param body, file
 const addUser = async (body, file) => {
     try {
-        const result = await AddToCloudinary(file.path, "users");
+        const result = await AddToCloudinary(file.path, "users"); //adds the file to the cloudinary, the file is picked from the file path
         if (!result) {
             throw { status: 500, message: "image could not be saved", error: "error at addUser function" };
         }
@@ -51,6 +57,7 @@ const addUser = async (body, file) => {
         });
         const user = await newUser.save();
 
+        // deletes the image from the uploads folder if the image with the same name exists
         const imageExist = path.join(__dirname, "../../uploads", file.originalname);
         if (imageExist) {
             fs.unlinkSync(imageExist);
@@ -61,6 +68,8 @@ const addUser = async (body, file) => {
     }
 }
 
+// @desc Updates a user with matching id
+// @Param id: String, body, file
 const updateUser = async (id, body, file) => {
     let updatedUser = {
         username: body.username,
@@ -71,7 +80,7 @@ const updateUser = async (id, body, file) => {
     };
     try {
         if (file) {
-            const saved_result = await AddToCloudinary(file.path, "users");
+            const saved_result = await AddToCloudinary(file.path, "users"); // add the image to the cloudinary
             if (!saved_result) {
                 throw { status: 500, message: "image could not be saved", error: "error at updateUser function" };
             }
@@ -80,11 +89,13 @@ const updateUser = async (id, body, file) => {
                 url: saved_result.url
             }
             const userImage = await getUserById(id);
-            const deleted_result = await DeleteFromCloudinary(userImage.imageUrl.img_id);
+            const deleted_result = await DeleteFromCloudinary(userImage.imageUrl.img_id); // deletes the image from cloudinary
             if (!deleted_result) {
                 throw { status: 500, message: "previous image could not be deleted", error: "error at updateUser function" };
             }
             const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+
+            // deletes the image from the uploads folder
             const imageExist = path.join(__dirname, "../../uploads", file.originalname);
             if (imageExist) {
                 fs.unlinkSync(imageExist);
@@ -103,6 +114,8 @@ const updateUser = async (id, body, file) => {
     }
 }
 
+// @desc Deletes a user with matching id
+// @param id: String
 const deleteUser = async (id) => {
     try {
         const result = await User.findByIdAndDelete(id);
