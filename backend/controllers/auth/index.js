@@ -1,10 +1,10 @@
 const { hashValue, compareValues } = require("../../utils/bcrypt");
 const { getUserByEmail, deleteUser, addUser } = require("../users/userFunctions");
-const { CONFLICT_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR, UNAUTHORIZED_EXCEPTION } = require("../../utils/constants");
+const { CONFLICT_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR, UNAUTHORIZED_EXCEPTION, NOT_MATCHED_ERROR } = require("../../utils/constants");
 const { generateAccessToken, generateRefreshToken } = require("../../utils/tokenGenerators");
-const { TokenModel } = require("../../model/token.model");
+const { TokenModel, UserModel, VerificationCodeModel } = require("../../model");
 const { sendMail } = require("../../utils/mailer");
-const {generateCode} = require("../../utils/codeGenerator");
+const { generateCode } = require("../../utils/codeGenerator");
 
 
 // @desc registers a user if user does not exist in the database
@@ -37,10 +37,20 @@ const register = async (req, res) => {
 
         // sends email with a verification code 
         let VERIFICATION_CODE = generateCode();
+
+        const saveVerificationCode = VerificationCodeModel.findOneAndUpdate({ email: userSaved.email }, {
+            email: userSaved.email,
+            code: VERIFICATION_CODE
+        }, { new: true, upsert: true }); // saving verification code after generation to verify the user after client sends verification code
+
+        if (!saveVerificationCode) {
+            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "verification code could not be saved" });
+        }
         const email = await sendMail(userSaved, VERIFICATION_CODE);
 
         const userTokenObject = generateAccessToken(userSaved); // generates access token which expires in 15 min.
         const RefreshTokenObject = generateRefreshToken(userSaved); // generates refresh token which expires in 1 day.
+
         const TokenObject = new TokenModel({
             uuid: userSaved._id,
             refresh_token: RefreshTokenObject.refresh_token
@@ -127,29 +137,58 @@ const signout = (req, res, next) => {
 // @param
 // @access private
 const resetPassword = (req, res, next) => {
+    try {
 
+    } catch (error) {
+        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+    }
 };
 
 // @desc 
 // @param
 // @access private
 const forgotPassword = (req, res, next) => {
+    try {
 
+    } catch (error) {
+        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+    }
 };
 
 
-// @desc 
-// @param
+// @desc deletes an account which matches with the id
+// @route /api/auth/:id
 // @access private
-const deleteAccount = (req, res, next) => {
+const deleteAccount = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const deletedAccount = await deleteUser(id);
+        if (!deletedAccount) {
+            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "not able to delete account" });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+    }
 
 };
 
-// @desc 
-// @param
+// @desc verifies the verification code sent from the client
+// @route /api/auth/verify
 // @access private
-const emailVerificationCode = (req, res, next) => {
-    const {code} = req.body();
+const emailVerificationCode = async (req, res, next) => {
+    const { email, code } = req.body();
+    const userVerification = await VerificationCodeModel.findOne({ email });
+    if (!userVerification) {
+        return res.status(404).json({ message: NOT_FOUND_ERROR, error: "verification code not found" })
+    }
+    if (userVerification.code == code) {
+        const userIsVerified = await UserModel.findOneAndUpdate({ email: email }, { isVerified: true });
+        if (!userIsVerified) {
+            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "user could not get verified" });
+        }
+    } else {
+        return res.status(203).json({ message: NOT_MATCHED_ERROR, error: "the verification code from the client does not match" });
+    }
 };
 
-module.exports = { register, signin, signout, resetPassword, forgotPassword, deleteAccount };
+module.exports = { register, signin, signout, resetPassword, forgotPassword, deleteAccount, emailVerificationCode };

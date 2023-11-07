@@ -1,5 +1,5 @@
-const {GetUsers, GetUserById, GetUserByEmail, AddUser, UpdateUser, DeleteUser } = require("./users/index");
-const {register, signin, signout, resetPassword, forgotPassword} = require("./auth");
+const { GetUsers, GetUserById, GetUserByEmail, AddUser, UpdateUser, DeleteUser } = require("./users");
+const { register, signin, signout, resetPassword, forgotPassword, deleteAccount, emailVerificationCode } = require("./auth");
 
 module.exports = {
     AddUser,
@@ -8,9 +8,11 @@ module.exports = {
     GetUserByEmail,
     UpdateUser,
     DeleteUser,
-    register, 
+    register,
     signin,
     signout,
     resetPassword,
-    forgotPassword
+    forgotPassword,
+    deleteAccount,
+    emailVerificationCode
 }

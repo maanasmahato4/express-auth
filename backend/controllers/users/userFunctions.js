@@ -1,5 +1,5 @@
 const path = require("path");
-const { User } = require("../../model/user.model");
+const { UserModel } = require("../../model");
 const fs = require("fs");
 const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 const { AddToCloudinary, DeleteFromCloudinary } = require("../../utils/cloudinary");
@@ -7,7 +7,7 @@ const { AddToCloudinary, DeleteFromCloudinary } = require("../../utils/cloudinar
 // @desc Returns and array of users
 const getUsers = async () => {
     try {
-        const users = await User.find();
+        const users = await UserModel.find();
         return users;
     } catch (error) {
         throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
@@ -18,7 +18,7 @@ const getUsers = async () => {
 // @param id: String
 const getUserById = async (id) => {
     try {
-        const user = await User.findById(id);
+        const user = await UserModel.findById(id);
         return user;
     } catch (error) {
         throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
@@ -29,7 +29,7 @@ const getUserById = async (id) => {
 // @param email:String
 const getUserByEmail = async (email) => {
     try {
-        const user = await User.findOne({ email: email });
+        const user = await UserModel.findOne({ email: email });
         return user;
     } catch (error) {
         throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
@@ -44,7 +44,7 @@ const addUser = async (body, file) => {
         if (!result) {
             throw { status: 500, message: "image could not be saved", error: "error at addUser function" };
         }
-        const newUser = new User({
+        const newUser = new UserModel({
             username: body.username,
             email: body.email,
             password: body.password,
@@ -93,7 +93,7 @@ const updateUser = async (id, body, file) => {
             if (!deleted_result) {
                 throw { status: 500, message: "previous image could not be deleted", error: "error at updateUser function" };
             }
-            const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+            const user = await UserModel.findByIdAndUpdate(id, updatedUser, { new: true });
 
             // deletes the image from the uploads folder
             const imageExist = path.join(__dirname, "../../uploads", file.originalname);
@@ -106,7 +106,7 @@ const updateUser = async (id, body, file) => {
                 img_id: body.imageUrl.img_id,
                 url: body.imageUrl.url
             }
-            const user = await User.findByIdAndUpdate(body._id, updatedUser, { new: true });
+            const user = await UserModel.findByIdAndUpdate(body._id, updatedUser, { new: true });
             return user;
         }
     } catch (error) {
@@ -118,7 +118,7 @@ const updateUser = async (id, body, file) => {
 // @param id: String
 const deleteUser = async (id) => {
     try {
-        const result = await User.findByIdAndDelete(id);
+        const result = await UserModel.findByIdAndDelete(id);
         return result;
     } catch (error) {
         throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
