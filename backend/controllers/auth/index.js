@@ -150,8 +150,6 @@ const deleteAccount = (req, res, next) => {
 // @access private
 const emailVerificationCode = (req, res, next) => {
     const {code} = req.body();
-
-    const {}
 };
 
 module.exports = { register, signin, signout, resetPassword, forgotPassword, deleteAccount };
