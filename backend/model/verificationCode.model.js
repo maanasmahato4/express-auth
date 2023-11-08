@@ -9,6 +9,11 @@ const VerifySchema = new mongoose.Schema({
     code: {
         type: Number,
         required: true
+    },
+    verificationType: {
+        type: String,
+        enum: ['register', 'forgot'],
+        required: true
     }
 });
 

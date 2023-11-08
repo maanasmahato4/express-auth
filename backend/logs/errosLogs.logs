@@ -53,3 +53,4 @@
 11/5/2023, 7:41:12 PM	a259c96c-d4e1-4a42-a548-0cd59581e429	PUT	/api/user/654793b2c6cde134bf28039a	[object Object]
 11/5/2023, 11:59:58 PM	284ea58b-6229-44b9-a204-d3353eab5f42	POST	/api/auth/register	[object Object]
 11/6/2023, 12:00:51 AM	4ed676cd-e953-4fc5-ade4-3fb72aac5842	POST	/api/auth/register	[object Object]
+11/9/2023, 1:39:57 AM	6c11e0b8-91f1-427b-9b93-15d8dd7271d1	POST	/api/auth/forgot-password	undefined

@@ -3,6 +3,7 @@ const express = require("express");
 const { DatabaseConnection } = require("./database/index");
 const mongoose = require("mongoose");
 const {Logger, ErrorHandler} = require("./middlewares");
+const cookieParser = require("cookie-parser");
 
 
 // initializing the app
@@ -14,6 +15,7 @@ DatabaseConnection();
 // middlewares
 app.use(Logger);
 app.use(express.json());
+app.use(cookieParser());
 
 // routes
 app.use("/api", require("./routes/index"));
