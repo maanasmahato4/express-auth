@@ -24,7 +24,7 @@ const GetUsers = async (req, res) => {
         }
         return res.status(200).json(users);
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: error });
     }
 }
 
@@ -52,7 +52,7 @@ const GetUserById = async (req, res) => {
         }
         return res.status(200).json(user);
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: error });
     }
 }
 
@@ -80,7 +80,7 @@ const GetUserByEmail = async (req, res) => {
         }
         return res.status(200).json(user);
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: error });
     }
 }
 
@@ -107,7 +107,7 @@ const AddUser = async (req, res, next) => {
         }
         return res.status(201).json(user);
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: error });
     }
 }
 
@@ -135,7 +135,7 @@ const UpdateUser = async (req, res) => {
         }
         return res.status(201).json(user);
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: error });
     };
 };
 
@@ -156,7 +156,7 @@ const DeleteUser = async (req, res) => {
         }
         res.status(204).json({ message: "user deleted" });
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: error });
     };
 };
 

@@ -8,7 +8,7 @@ const { generateCode } = require("../../utils/codeGenerator");
 
 
 // @desc registers a user if user does not exist in the database
-// @route /api/auth/register 
+// @route POST /api/auth/register 
 // @access private
 const register = async (req, res) => {
     const { username, email, password, roles, isVerified } = req.body;
@@ -20,7 +20,7 @@ const register = async (req, res) => {
             if (userExist.isVerified === false) {
                 await deleteUser(userExist._id);
             } else if (userExist.isVerified === true) {
-                return res.status(500).json({ message: CONFLICT_ERROR, error: "user already exists" });
+                return res.status(500).json({ message: "user already exists", error: CONFLICT_ERROR });
             }
         }
         const body = {
@@ -32,7 +32,7 @@ const register = async (req, res) => {
         };
         const userSaved = await addUser(body, file); // adds new user
         if (!userSaved) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "user could not be saved" });
+            return res.status(500).json({ message: "user could not be saved", error: INTERNAL_SERVER_ERROR });
         }
 
         // sends email with a verification code 
@@ -45,7 +45,7 @@ const register = async (req, res) => {
         }, { new: true, upsert: true }).exec(); // saving verification code after generation to verify the user after client sends verification code
 
         if (!saveVerificationCode) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "verification code could not be saved" });
+            return res.status(500).json({ message: "verification code could not be saved", error: INTERNAL_SERVER_ERROR });
         }
         const mailSent = await sendMail(userSaved, VERIFICATION_CODE);
         if (!mailSent) {
@@ -53,26 +53,26 @@ const register = async (req, res) => {
         }
         return res.status(200).json({ message: "mail sent" });
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
     }
 }
 
 // @desc Logs in a user if the user is verified and exists in the database
-// @route /api/auth/signin
+// @route POST /api/auth/signin
 // @access private
 const signin = async (req, res) => {
     const { email, password } = req.body;
     try {
         const userExist = await getUserByEmail(email);
         if (!userExist) {
-            return res.status(404).json({ message: NOT_FOUND_ERROR, error: "user does not exist" });
+            return res.status(404).json({ message: "user does not exist", error: NOT_FOUND_ERROR });
         }
         if (!userExist.isVerified) {
-            return res.status(203).json({ message: UNAUTHORIZED_EXCEPTION, error: "user is not verified" });
+            return res.status(203).json({ message: "user is not verified", error: UNAUTHORIZED_EXCEPTION });
         }
         const passwordValidation = await compareValues(password, userExist.password);
         if (!passwordValidation) {
-            return res.status(203).json({ message: UNAUTHORIZED_EXCEPTION, error: "password not matched" });
+            return res.status(203).json({ message: "password not matched", error: UNAUTHORIZED_EXCEPTION });
         }
         const userTokenObject = generateAccessToken(userExist);
         const RefreshTokenObject = generateRefreshToken(userExist);
@@ -90,23 +90,23 @@ const signin = async (req, res) => {
             }
         );
         if (!updatedToken) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "refresh token could not be saved" });
+            return res.status(500).json({ message: "refresh token could not be saved", error: INTERNAL_SERVER_ERROR });
         }
         res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
         return res.status(200).json(userTokenObject);
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error })
+        return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
     }
 }
 
 // @desc Logs out a user
-// @route /api/auth/signout
+// @route POST /api/auth/signout
 // @access private
 const signout = async (req, res) => {
     const cookies = req.cookies;
     try {
         if (!cookies?.jwt) {
-            return res.status(500).json({ message: NOT_FOUND_ERROR, error: "no jwt-cookie found" });
+            return res.status(500).json({ message: "no jwt-cookie found", error: NOT_FOUND_ERROR });
         }
         const refreshToken = cookies.jwt;
         if (refreshToken) {
@@ -114,38 +114,38 @@ const signout = async (req, res) => {
         }
         const deletedRefreshToken = await TokenModel.findOneAndDelete({ refresh_token: refreshToken })
         if (!deletedRefreshToken) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "refresh token not found" });
+            return res.status(500).json({ message: "refresh token not found", error: INTERNAL_SERVER_ERROR });
         }
         return res.status(200).json({ message: "success" });
     } catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
     }
 };
 
 // @desc changes the current password to a new password sent from the client by the user
-// @routes /api/auth/change-password
+// @routes PUT /api/auth/change-password
 // @access private
 const changePassword = async (req, res) => {
     try {
         const { email, password, newPassword } = req.body;
         const user = await getUserByEmail(email); // gets the user document which matches with the email
         if (!user) {
-            return res.status(404).json({ message: NOT_FOUND_ERROR, error: "user not found" });
+            return res.status(404).json({ message: "user does not exist", error: NOT_FOUND_ERROR });
         }
         const passwordVerified = await compareValues(password, user.password); //compares the password from the document with the password sent from the client
         if (!passwordVerified) {
-            return res.status(203).json({ message: UNAUTHORIZED_EXCEPTION, error: "password not matched" });
+            return res.status(203).json({ message: "password not matched", error: UNAUTHORIZED_EXCEPTION });
         }
         const passwordChanged = await UserModel.findByIdAndUpdate(user._id, {
             password: await hashValue(newPassword)
         }, { new: true }); //updates the password
         if (!passwordChanged) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "error changing password" });
+            return res.status(500).json({ message: "error changing password", error: INTERNAL_SERVER_ERROR });
         }
         // Call signout function to log out the user
         const signoutResponse = await signout(req, res);
         if (signoutResponse.statusCode !== 200) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "error signing out user after password change" });
+            return res.status(500).json({ message: "error signing out user after password change", error: INTERNAL_SERVER_ERROR });
         }
         return res.status(200).json({ message: "password changed" });
     } catch (error) {
@@ -154,38 +154,38 @@ const changePassword = async (req, res) => {
 };
 
 // @desc renew the current password sent from the client by the user
-// @routes /api/auth/renw-password
+// @routes PUT /api/auth/renw-password
 // @access private
 const renewPassword = async (req, res) => {
     try {
         const { email, newPassword } = req.body;
         const user = await getUserByEmail(email); // gets the user document which matches with the email
         if (!user) {
-            return res.status(404).json({ message: NOT_FOUND_ERROR, error: "user not found" });
+            return res.status(404).json({ message: "user does not exist", error: NOT_FOUND_ERROR });
         }
         const passwordChanged = await UserModel.findByIdAndUpdate(user._id, {
             password: await hashValue(newPassword)
         }, { new: true }); //updates the password
         if (!passwordChanged) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "error changing password" });
+            return res.status(500).json({ message: "error changing password", error: INTERNAL_SERVER_ERROR });
         }
         return res.status(200).json({ message: "password renewed" });
     }
 
     catch (error) {
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
     }
 };
 
 // @desc sends the verification code if the user forgets password
-// @route /api/auth/forgot-password
+// @route PUT /api/auth/forgot-password
 // @access private
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await getUserByEmail(email); // gets the user document which matches with the email
         if (!user) {
-            return res.status(404).json({ message: NOT_FOUND_ERROR, error: "user not found" });
+            return res.status(404).json({ message: "user does not exist", error: NOT_FOUND_ERROR });
         };
         // sends email with a verification code 
         let VERIFICATION_CODE = generateCode();
@@ -196,26 +196,26 @@ const forgotPassword = async (req, res) => {
             verificationType: 'forgot'
         }, { new: true, upsert: true }).exec(); // saving verification code after generation to verify the user after client sends verification code
         if (!saveVerificationCode) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "verification code could not be saved" });
+            return res.status(500).json({ message: "verification code could not be saved", error: INTERNAL_SERVER_ERROR });
         }
         await sendMail(user, VERIFICATION_CODE);
         return res.status(200).json({ message: "mail sent" });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
+        return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
     }
 };
 
 
 // @desc deletes an account which matches with the id
-// @route /api/auth/:id
+// @route DELETE /api/auth/:id
 // @access private
 const deleteAccount = async (req, res) => {
     const id = req.params.id;
     try {
         const deletedAccount = await deleteUser(id);
         if (!deletedAccount) {
-            return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "not able to delete account" });
+            return res.status(500).json({ message: "not able to delete account", error: INTERNAL_SERVER_ERROR });
         }
     } catch (error) {
         return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
@@ -224,23 +224,23 @@ const deleteAccount = async (req, res) => {
 };
 
 // @desc verifies the verification code sent from the client
-// @route /api/auth/verify
+// @route POST /api/auth/verify
 // @access private
 const emailVerificationCode = async (req, res) => {
     try {
         const { email, code, verificationType } = req.body;
         const userVerification = await VerificationCodeModel.findOne({ email: email });
         if (!userVerification) {
-            return res.status(404).json({ message: NOT_FOUND_ERROR, error: "verification code not found" })
+            return res.status(404).json({ error: NOT_FOUND_ERROR, message: "verification code not found" });
         }
         if (!(userVerification.code == code && userVerification.verificationType === verificationType)) {
-            return res.status(203).json({ message: NOT_MATCHED_ERROR, error: "the verification code from the client does not match" });
+            return res.status(203).json({ error: NOT_MATCHED_ERROR, message: "the verification code from the client does not match" });
         }
 
         if (verificationType === "register") {
             const userIsVerified = await UserModel.findOneAndUpdate({ email: email }, { isVerified: true }, { new: true });
             if (!userIsVerified) {
-                return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "user could not get verified" });
+                return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: "user could not get verified" });
             }
             const userTokenObject = generateAccessToken(userIsVerified); // generates access token which expires in 15 min.
             const RefreshTokenObject = generateRefreshToken(userIsVerified); // generates refresh token which expires in 1 day.
@@ -251,7 +251,7 @@ const emailVerificationCode = async (req, res) => {
             });
             const savedRefreshToken = await TokenObject.save(); // saves the refresh token to the database for 1 day or until user logsout
             if (!savedRefreshToken) {
-                return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: "user refresh token could not be saved" });
+                return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: "user refresh token could not be saved" });
             }
             res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
             return res.status(200).json({ message: "use has been verified", access_token: userTokenObject.access_token });

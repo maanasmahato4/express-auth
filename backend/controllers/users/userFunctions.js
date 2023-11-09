@@ -10,7 +10,7 @@ const getUsers = async () => {
         const users = await UserModel.find();
         return users;
     } catch (error) {
-        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
+        throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error };
     }
 }
 
@@ -21,7 +21,7 @@ const getUserById = async (id) => {
         const user = await UserModel.findById(id);
         return user;
     } catch (error) {
-        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
+        throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error };
     }
 }
 
@@ -32,7 +32,7 @@ const getUserByEmail = async (email) => {
         const user = await UserModel.findOne({ email: email });
         return user;
     } catch (error) {
-        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
+        throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error };
     }
 }
 
@@ -64,7 +64,7 @@ const addUser = async (body, file) => {
         }
         return user;
     } catch (error) {
-        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error }
+        throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error }
     }
 }
 
@@ -110,7 +110,7 @@ const updateUser = async (id, body, file) => {
             return user;
         }
     } catch (error) {
-        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
+        throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error };
     }
 }
 
@@ -121,7 +121,7 @@ const deleteUser = async (id) => {
         const result = await UserModel.findByIdAndDelete(id);
         return result;
     } catch (error) {
-        throw { status: 500, message: INTERNAL_SERVER_ERROR, error: error };
+        throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error };
     }
 }
 
