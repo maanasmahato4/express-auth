@@ -4,7 +4,12 @@ const { DatabaseConnection } = require("./database/index");
 const mongoose = require("mongoose");
 const {Logger, ErrorHandler} = require("./middlewares");
 const cookieParser = require("cookie-parser");
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("swagger-jsdoc");
+const {options} = require("./Config/swagger.config");
 
+//constants
+const specs = swaggerDocument(options);
 
 // initializing the app
 const app = express();
