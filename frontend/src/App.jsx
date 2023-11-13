@@ -5,6 +5,8 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/signup';
 import Users from './pages/Users';
 import CodeVerification from './pages/CodeVerification';
+import ChangePassword from './pages/ChangePassword';
+import RenewPassword from './pages/RenewPassword';
 
 const ROLES = {
   ADMIN: "admin",
@@ -18,7 +20,9 @@ function App() {
       <Route path='/signup' element={<SignUp />} />
       <Route path='/signin' element={<SignIn />} />
       <Route path='/users' element={<Users />} />
-      <Route path='/verify' element={<CodeVerification/>}/>
+      <Route path='/verify' element={<CodeVerification />} />
+      <Route path='/change-password' element={<ChangePassword />} />
+      <Route path='/renew-password' element={<RenewPassword />} />
     </Routes>
   )
 }

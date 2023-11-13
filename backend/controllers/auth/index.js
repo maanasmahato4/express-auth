@@ -116,7 +116,7 @@ const signout = async (req, res) => {
         if (!deletedRefreshToken) {
             return res.status(500).json({ message: "refresh token not found", error: INTERNAL_SERVER_ERROR });
         }
-        return res.status(200).json({ message: "success" });
+        return res.status(200).json({ message: "success", isAuthenticated: false });
     } catch (error) {
         return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
     }
@@ -147,7 +147,7 @@ const changePassword = async (req, res) => {
         if (signoutResponse.statusCode !== 200) {
             return res.status(500).json({ message: "error signing out user after password change", error: INTERNAL_SERVER_ERROR });
         }
-        return res.status(200).json({ message: "password changed" });
+        return res.status(200).json({ message: "password changed", isAuthenticated: false });
     } catch (error) {
         return res.status(500).json({ message: INTERNAL_SERVER_ERROR, error: error });
     }
@@ -260,7 +260,7 @@ const emailVerificationCode = async (req, res) => {
             if (!user) {
                 return res.status(404).json({ message: "user not found", error: NOT_FOUND_ERROR });
             }
-            return res.status(200).json({ message: "user verified" });
+            return res.status(200).json({ message: "user verified", isVerified: true });
         }
 
     } catch (error) {
