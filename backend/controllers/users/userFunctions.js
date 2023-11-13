@@ -119,6 +119,10 @@ const updateUser = async (id, body, file) => {
 const deleteUser = async (id) => {
     try {
         const result = await UserModel.findByIdAndDelete(id);
+        const deleted_image = await DeleteFromCloudinary(result.imageUrl.img_id);
+        if (!deleted_image) {
+            throw { status: 500, message: "image could not be deleted", error: "error at deleteUser function" };
+        }
         return result;
     } catch (error) {
         throw { status: 500, error: INTERNAL_SERVER_ERROR, message: error };

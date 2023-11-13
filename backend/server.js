@@ -4,12 +4,7 @@ const { DatabaseConnection } = require("./database/index");
 const mongoose = require("mongoose");
 const {Logger, ErrorHandler} = require("./middlewares");
 const cookieParser = require("cookie-parser");
-const swaggerUI = require("swagger-ui-express");
-const swaggerDocument = require("swagger-jsdoc");
-const {options} = require("./Config/swagger.config");
-
-//constants
-const specs = swaggerDocument(options);
+const cors = require("cors");
 
 // initializing the app
 const app = express();
@@ -18,6 +13,10 @@ const app = express();
 DatabaseConnection();
 
 // middlewares
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    //credentials: true
+}))
 app.use(Logger);
 app.use(express.json());
 app.use(cookieParser());

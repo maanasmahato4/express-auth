@@ -5,6 +5,7 @@ const { generateAccessToken, generateRefreshToken } = require("../../utils/token
 const { TokenModel, UserModel, VerificationCodeModel } = require("../../model");
 const { sendMail } = require("../../utils/mailer");
 const { generateCode } = require("../../utils/codeGenerator");
+const { DeleteFromCloudinary } = require("../../utils/cloudinary");
 
 
 // @desc registers a user if user does not exist in the database
@@ -19,6 +20,7 @@ const register = async (req, res) => {
         if (userExist) {
             if (userExist.isVerified === false) {
                 await deleteUser(userExist._id);
+                await DeleteFromCloudinary(userExist.imageUrl.img_id);
             } else if (userExist.isVerified === true) {
                 return res.status(500).json({ message: "user already exists", error: CONFLICT_ERROR });
             }
@@ -32,6 +34,7 @@ const register = async (req, res) => {
         };
         const userSaved = await addUser(body, file); // adds new user
         if (!userSaved) {
+            console.log("error");
             return res.status(500).json({ message: "user could not be saved", error: INTERNAL_SERVER_ERROR });
         }
 
@@ -47,10 +50,7 @@ const register = async (req, res) => {
         if (!saveVerificationCode) {
             return res.status(500).json({ message: "verification code could not be saved", error: INTERNAL_SERVER_ERROR });
         }
-        const mailSent = await sendMail(userSaved, VERIFICATION_CODE);
-        if (!mailSent) {
-            return res.status(500).json({ message: "mail was not sent", error: INTERNAL_SERVER_ERROR });
-        }
+        await sendMail(userSaved, VERIFICATION_CODE);
         return res.status(200).json({ message: "mail sent" });
     } catch (error) {
         return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
@@ -92,7 +92,7 @@ const signin = async (req, res) => {
         if (!updatedToken) {
             return res.status(500).json({ message: "refresh token could not be saved", error: INTERNAL_SERVER_ERROR });
         }
-        res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+        res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, sameSite: 'Lax', maxAge: 24 * 60 * 60 * 1000 });
         return res.status(200).json(userTokenObject);
     } catch (error) {
         return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
