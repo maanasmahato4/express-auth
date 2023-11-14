@@ -9,10 +9,13 @@ const TokenSchema = new mongoose.Schema({
     refresh_token: {
         type: String,
         required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 24 * 60 * 60 // expires after 24 hours
     }
 });
-
-TokenSchema.index({createdAt: 1}, {expireAfterSeconds: 24 * 60 * 60}); // expires the document after 24 hours
 
 const TokenModel = mongoose.model("user_tokens", TokenSchema);
 module.exports = {TokenModel};

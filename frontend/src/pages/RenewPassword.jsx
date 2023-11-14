@@ -6,10 +6,10 @@ import { Button, Container, TextInput } from "@mantine/core";
 
 function RenewPassword() {
   const navigate = useNavigate();
-  const { verificationObject } = useContext(AuthContext);
+  const { verificationObject, isVerified } = useContext(AuthContext);
   const [renewPasswordFormData, setRenewPasswordFormData] = useState({ email: verificationObject.email, newPassword: "" });
   useEffect(() => {
-    if (verificationObject.verificationType !== "forgot") {
+    if (verificationObject.verificationType !== "forgot" && !isVerified) {
       navigate("/login");
     }
   }, [verificationObject])
@@ -21,7 +21,7 @@ function RenewPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await publicApi.post("/auth/renew-password", renewPasswordFormData);
+      const { data } = await publicApi.put("/auth/renew-password", renewPasswordFormData);
       if (data.message === "password renewed") {
         navigate("/login");
       } else {

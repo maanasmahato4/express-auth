@@ -8,7 +8,7 @@ function ForgotPassword({ email }) {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const { data } = await publicApi("/auth/verify", email);
+    const { data } = await publicApi.post("/auth/forgot-password", {email});
     if (data.message === "mail sent") {
       setVerificationObject({ email: email, verificationType: "forgot" });
       navigate("/verify");
@@ -16,7 +16,7 @@ function ForgotPassword({ email }) {
   }
   return (
     <div>
-      <span style={{ color: "blue" }} onClick={handleSubmit}>forgot password</span>
+      <span style={{ color: "blue", "textDecoration": "underline", cursor: "pointer", marginBlock: "0.5rem" }} onClick={handleSubmit}>forgot password?</span>
     </div>
   )
 }

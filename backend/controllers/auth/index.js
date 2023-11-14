@@ -6,6 +6,7 @@ const { TokenModel, UserModel, VerificationCodeModel } = require("../../model");
 const { sendMail } = require("../../utils/mailer");
 const { generateCode } = require("../../utils/codeGenerator");
 const { DeleteFromCloudinary } = require("../../utils/cloudinary");
+const jwt = require("jsonwebtoken");
 
 
 // @desc registers a user if user does not exist in the database
@@ -92,7 +93,7 @@ const signin = async (req, res) => {
         if (!updatedToken) {
             return res.status(500).json({ message: "refresh token could not be saved", error: INTERNAL_SERVER_ERROR });
         }
-        res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, sameSite: 'Lax', maxAge: 24 * 60 * 60 * 1000 });
+        res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 });
         return res.status(200).json(userTokenObject);
     } catch (error) {
         return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
@@ -110,12 +111,13 @@ const signout = async (req, res) => {
         }
         const refreshToken = cookies.jwt;
         if (refreshToken) {
-            res.clearCookie("jwt", { httpOnly: true, secure: false, sameSite: 'None' });
+            res.clearCookie("jwt", { httpOnly: true, secure: false });
         }
         const deletedRefreshToken = await TokenModel.findOneAndDelete({ refresh_token: refreshToken })
         if (!deletedRefreshToken) {
             return res.status(500).json({ message: "refresh token not found", error: INTERNAL_SERVER_ERROR });
         }
+        res.clearCookie("jwt",)
         return res.status(200).json({ message: "success", isAuthenticated: false });
     } catch (error) {
         return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
@@ -181,8 +183,8 @@ const renewPassword = async (req, res) => {
 // @route PUT /api/auth/forgot-password
 // @access private
 const forgotPassword = async (req, res) => {
+    const { email } = req.body;
     try {
-        const { email } = req.body;
         const user = await getUserByEmail(email); // gets the user document which matches with the email
         if (!user) {
             return res.status(404).json({ message: "user does not exist", error: NOT_FOUND_ERROR });
@@ -253,7 +255,7 @@ const emailVerificationCode = async (req, res) => {
             if (!savedRefreshToken) {
                 return res.status(500).json({ error: INTERNAL_SERVER_ERROR, message: "user refresh token could not be saved" });
             }
-            res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie("jwt", RefreshTokenObject.refresh_token, { httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 });
             return res.status(200).json({ message: "use has been verified", access_token: userTokenObject.access_token });
         } else if (verificationType === "forgot") {
             const user = await UserModel.findOne({ email: email });
@@ -269,4 +271,39 @@ const emailVerificationCode = async (req, res) => {
     }
 };
 
-module.exports = { register, signin, signout, changePassword, renewPassword, forgotPassword, deleteAccount, emailVerificationCode };
+// @desc create a new access_token with the help of refresh token
+// @route POST /api/auth/refresh
+// @access private
+const refreshAccessToken = async (req, res) => {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) {
+        return res.status(404).json({ message: "jwt no found", error: NOT_FOUND_ERROR });
+    }
+    const refresh_token = cookies.jwt;
+    try {
+        const userWithRefreshToken = await TokenModel.findOne({ refresh_token: refresh_token });
+        if (!userWithRefreshToken) {
+            return res.status(404).json({ message: "user with this token not found", error: NOT_FOUND_ERROR });
+        }
+        const user = await UserModel.findById(userWithRefreshToken.uuid);
+        if (!user) {
+            return res.status(404).json({ message: "user does not exist", error: NOT_FOUND_ERROR });
+        }
+        jwt.verify(
+            refresh_token,
+            process.env.REFRESH_TOKEN_SECRET,
+            (err, decoded) => {
+                if (!err || user._id !== decoded._id) {
+                    return res.sendStatus(403);
+                }
+                const access_token = generateAccessToken(user);
+                return res.status(200).json({ access_token });
+            }
+        )
+    } catch (error) {
+        return res.status(500).json({ message: error, error: INTERNAL_SERVER_ERROR });
+    }
+
+}
+
+module.exports = { register, signin, signout, changePassword, renewPassword, forgotPassword, deleteAccount, emailVerificationCode, refreshAccessToken };

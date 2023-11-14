@@ -4,7 +4,8 @@ import axios from "axios";
 const BASE_URL = "http://localhost:3000/api";
 
 const publicApi = axios.create({
-    baseURL: BASE_URL
+    baseURL: BASE_URL,
+    withCredentials: true
 });
 
 const privateApi = axios.create({

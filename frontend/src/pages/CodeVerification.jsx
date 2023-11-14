@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 function CodeVerification() {
     const navigate = useNavigate();
-    const { verificationObject, setAccessToken, setIsAuthenticated, setDecodedTokenObject } = useContext(AuthContext);
+    const { verificationObject, setAccessToken, setIsAuthenticated, setDecodedTokenObject, setIsVerified } = useContext(AuthContext);
 
     const [verification, setVerification] = useState({
         email: verificationObject.email,
@@ -42,7 +42,8 @@ function CodeVerification() {
                 if (!data.isVerified) {
                     console.log("error at code verification component");
                 } else {
-                    navigate("/renew");
+                    setIsVerified(true);
+                    navigate("/renew-password");
                 }
             }
         } catch (error) {

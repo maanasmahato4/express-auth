@@ -7,6 +7,8 @@ import Users from './pages/Users';
 import CodeVerification from './pages/CodeVerification';
 import ChangePassword from './pages/ChangePassword';
 import RenewPassword from './pages/RenewPassword';
+import UserProfile from './components/user';
+import { ProtectedRoute } from "./components/protectedRoute";
 
 const ROLES = {
   ADMIN: "admin",
@@ -16,13 +18,30 @@ const ROLES = {
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      } />
       <Route path='/signup' element={<SignUp />} />
       <Route path='/signin' element={<SignIn />} />
-      <Route path='/users' element={<Users />} />
+      <Route path='/users' element={
+        <ProtectedRoute>
+          <Users />
+        </ProtectedRoute>
+      } />
       <Route path='/verify' element={<CodeVerification />} />
-      <Route path='/change-password' element={<ChangePassword />} />
+      <Route path='/change-password' element={
+        <ProtectedRoute>
+          <ChangePassword />
+        </ProtectedRoute>
+      } />
       <Route path='/renew-password' element={<RenewPassword />} />
+      <Route path='/user' element={
+        <ProtectedRoute>
+          <UserProfile />
+        </ProtectedRoute>
+      } />
     </Routes>
   )
 }

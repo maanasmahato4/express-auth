@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { Button, Container, TextInput } from "@mantine/core";
 import { publicApi } from "../api/axios";
 import { AuthContext } from "../context/auth.context";
@@ -6,14 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 function ChangePassword() {
   const navigate = useNavigate();
-  const { isAuthenticated, setAccessToken, decodedTokenObject, setDecodedTokenObject, setIsAuthenticated } = useContext(AuthContext);
-  const [changePasswordForm, setChangePasswordForm] = useState({ email: "", password: "", newPassword: "" });
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated]);
+  const { accessToken, setAccessToken, decodedTokenObject, setDecodedTokenObject, setIsAuthenticated } = useContext(AuthContext);
+  const [changePasswordForm, setChangePasswordForm] = useState({ email: decodedTokenObject.userInfo.email, password: "", newPassword: "" });
 
   const handleChange = (e) => {
     setChangePasswordForm({ ...changePasswordForm, [e.target.name]: e.target.value });
@@ -23,7 +17,12 @@ function ChangePassword() {
     e.preventDefault();
     console.log(changePasswordForm);
     try {
-      const { data } = await publicApi.post("/auth/change-password", changePasswordForm);
+      const { data } = await publicApi.put("/auth/change-password", changePasswordForm, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      console.log(data);
       if (data.isAuthenticated === false) {
         setAccessToken('');
         setDecodedTokenObject('');

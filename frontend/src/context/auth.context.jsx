@@ -8,7 +8,9 @@ export const AuthContext = createContext({
     isAuthenticated: false,
     setIsAuthenticated: () => false,
     verificationObject: {email: "", verificationType: ""},
-    setVerificationObject: () => {}
+    setVerificationObject: () => {},
+    isVerified: false,
+    setIsVerified: () => false
 });
 
 export const AuthContextProvider = ({ children }) => {
@@ -26,7 +28,9 @@ export const AuthContextProvider = ({ children }) => {
         isAuthenticated,
         setIsAuthenticated,
         verificationObject,
-        setVerificationObject
+        setVerificationObject,
+        isVerified,
+        setIsVerified
     }}>
         {children}
     </AuthContext.Provider>

@@ -1,42 +1,33 @@
 import { publicApi } from "../api/axios";
-import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../context/auth.context";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Users() {
     const [users, setUsers] = useState([]);
-    const { isAuthenticated } = useContext(AuthContext);
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (isAuthenticated !== true) {
-            navigate("/login");
-        }
-    }, [isAuthenticated]);
 
     useEffect(() => {
-        let isMounted = true;
         const controller = new AbortController();
         const getUser = async () => {
             try {
                 const users = await publicApi.get("/users", {
                     signal: controller.signal
                 });
-                isMounted && setUsers(users.data);
+                setUsers(users.data);
             } catch (error) {
-                console.log(error);
+                if (!controller.signal.aborted) {
+                    console.log(error);
+                }
             }
         };
 
         getUser();
         return () => {
-            isMounted = false;
             controller.abort()
         }
     }, [])
 
     return (
         <div>
-            {users?.length > 1 ?
+            {users?.length >= 1 ?
                 <div>
                     {users.map((user, idx) => {
                         return <ul key={idx}>
@@ -49,6 +40,5 @@ function Users() {
         </div>
     )
 }
-
 
 export default Users;
