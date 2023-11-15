@@ -272,12 +272,12 @@ const emailVerificationCode = async (req, res) => {
 };
 
 // @desc create a new access_token with the help of refresh token
-// @route POST /api/auth/refresh
+// @route GET /api/auth/refresh
 // @access private
 const refreshAccessToken = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
-        return res.status(404).json({ message: "jwt no found", error: NOT_FOUND_ERROR });
+        return res.status(404).json({ message: "jwt not found", error: NOT_FOUND_ERROR });
     }
     const refresh_token = cookies.jwt;
     try {
@@ -293,7 +293,7 @@ const refreshAccessToken = async (req, res) => {
             refresh_token,
             process.env.REFRESH_TOKEN_SECRET,
             (err, decoded) => {
-                if (!err || user._id !== decoded._id) {
+                if (err || !(user.email === decoded.userInfo.email)) {
                     return res.sendStatus(403);
                 }
                 const access_token = generateAccessToken(user);

@@ -12,7 +12,8 @@ const { AddUser,
     signout,
     forgotPassword,
     changePassword,
-    renewPassword
+    renewPassword,
+    refreshAccessToken
 } = require("../controllers");
 const { verifyJWT } = require("../middlewares/verifyJwt");
 
@@ -20,7 +21,7 @@ const router = express.Router();
 
 router
     // user routes
-    .get("/users", GetUsers)
+    .get("/users", verifyJWT, GetUsers)
     .get("/user/:id", GetUserById)
     .get("/user", GetUserByEmail)
     .post("/user", upload.single("image"), AddUser)
@@ -28,6 +29,7 @@ router
     .delete("/user/:id", DeleteUser)
     // auth routes
     .post("/auth/register", upload.single("image"), register)
+    .get("/auth/refresh", refreshAccessToken)
     .post("/auth/signin", signin)
     .post("/auth/verify", emailVerificationCode)
     .post("/auth/forgot-password", forgotPassword)

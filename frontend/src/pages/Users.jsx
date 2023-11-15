@@ -1,20 +1,25 @@
-import { publicApi } from "../api/axios";
 import { useState, useEffect } from "react";
+import {usePrivateAxios} from "../hooks/useAxiosPrivate";
+import {useNavigate, useLocation} from "react-router-dom";
 
 function Users() {
     const [users, setUsers] = useState([]);
+    const privateApi = usePrivateAxios();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const controller = new AbortController();
         const getUser = async () => {
             try {
-                const users = await publicApi.get("/users", {
+                const users = await privateApi.get("/users", {
                     signal: controller.signal
                 });
                 setUsers(users.data);
             } catch (error) {
                 if (!controller.signal.aborted) {
                     console.log(error);
+                    navigate('/signin', { state: { from: location }, replace: true });
                 }
             }
         };

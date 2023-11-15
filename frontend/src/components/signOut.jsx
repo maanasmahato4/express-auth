@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { privateApi, publicApi } from "../api/axios";
+import { privateApi } from "../api/axios";
 import { AuthContext } from "../context/auth.context";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,9 @@ function SignOut() {
 
     const handleSignOut = async () => {
         try {
-            console.log(accessToken);
             const { data } = await privateApi.post("/auth/signout", {}, {
                 headers: `Bearer ${accessToken}`
             });
-            console.log(data);
             if (data.isAuthenticated === false) {
                 setAccessToken('');
                 setDecodedTokenObject({})
