@@ -5,7 +5,7 @@ import { privateApi } from "../api/axios";
 import { AuthContext } from "../context/auth.context";
 
 export const usePrivateAxios = () => {
-    const { accessToken, setAccessToken } = useContext(AuthContext);
+    const { accessToken } = useContext(AuthContext);
     const refresh = useRefreshToken();
 
     useEffect(() => {
@@ -26,7 +26,6 @@ export const usePrivateAxios = () => {
                     prevReq.sent = true;
                     const newAccessTokenObject = await refresh();
                     prevReq.headers['Authorization'] = `Bearer ${newAccessTokenObject.access_token}`;
-                    setAccessToken(newAccessTokenObject.access_token);
                     return privateApi(prevReq);
                 }
                 return Promise.reject(error);

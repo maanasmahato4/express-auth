@@ -10,8 +10,8 @@ export const useRefreshToken = () => {
         const { data } = await axios.get("http://localhost:3000/api/auth/refresh", {
             withCredentials: true
         });
-        setAccessToken(data.access_token);
-        return data.access_token;
+        setAccessToken(data.accessTokenObject.access_token);
+        return data.accessTokenObject;
     }
     return refresh;
 }

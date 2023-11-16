@@ -296,8 +296,8 @@ const refreshAccessToken = async (req, res) => {
                 if (err || !(user.email === decoded.userInfo.email)) {
                     return res.sendStatus(403);
                 }
-                const access_token = generateAccessToken(user);
-                return res.status(200).json({ access_token });
+                const accessTokenObject = generateAccessToken(user);
+                return res.status(200).json({ accessTokenObject });
             }
         )
     } catch (error) {
